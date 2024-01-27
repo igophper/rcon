@@ -128,7 +128,11 @@ func Dial(address string, password string, options ...Option) (*Conn, error) {
 // creating a packet with a SERVERDATA_EXECCOMMAND_ID for the server to mirror,
 // and compiling its payload bytes in the appropriate order. The response body
 // is decompiled from bytes into a string for return.
-func (c *Conn) Execute(command string) (string, error) {
+func (c *Conn) Execute(command string, options ...Option) (string, error) {
+	for _, option := range options {
+		option(&c.settings)
+	}
+
 	if command == "" {
 		return "", ErrCommandEmpty
 	}
